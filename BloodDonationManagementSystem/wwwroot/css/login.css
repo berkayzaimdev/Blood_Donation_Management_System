@@ -1,0 +1,31 @@
+﻿.login-container {
+    max-width: 300px;
+    margin: 0 auto;
+    background-color: #BBBBBB;
+    padding: 10px 30px 10px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Calibri;
+    font-size: 16px
+}
+
+.field-icon {
+    float: right;
+    margin-top: -27.5px;
+    position: relative;
+    z-index: 2;
+}
+
+.form-group {
+    margin-bottom:15px;
+}
+
+.control-label {
+    font-family: Calibri Light;
+    font-size: 16px;
+    color: #3C3F41;
+}
+
+select, option {
+    color: #3C3F41
+}

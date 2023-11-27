@@ -1,0 +1,82 @@
+﻿<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+
+<link href="~/css/font-awesome.min.css" rel="stylesheet">
+
+<div class="login-container">
+    <div class="row">
+        <form method="" action="">
+            <div class="form-group">
+                <label class="control-label">Kullanıcı Tipi</label>
+                <div>
+                    <select>
+                        <option>Hasta</option>
+                        <option>Doktor</option>
+                        <option>Laborant</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">T.C. Kimlik Numarası</label>
+                <div>
+                    <input type="email" class="form-control" name="email" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">İsim</label>
+                <div>
+                    <input type="text" class="form-control" name="email" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Soyisim</label>
+                <div>
+                    <input type="text" class="form-control" name="email" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Doğum Tarihi</label>
+                <div>
+                    <input type="date" class="form-control" name="email" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Şifre</label>
+                <div>
+                    <input id="password-field" type="password" class="form-control" name="password" value="secret">
+                    <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Telefon</label>
+                <div>
+                    <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required />
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-center" style="margin-bottom:0px">
+                <div>
+                    <button type="submit" class="btn" style="background-color:#52616B;color:#F0F5F9;font-size:20px;font-family:Calibri;">Kayıt Ol</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(".toggle-password").click(function () {
+
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+
+    document.getElementById('phone').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+</script>
