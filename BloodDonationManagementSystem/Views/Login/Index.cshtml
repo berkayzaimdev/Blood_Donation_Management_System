@@ -1,32 +1,37 @@
-﻿<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
-
-<link href="~/css/font-awesome.min.css" rel="stylesheet">
+﻿@using BloodDonationManagementSystem.Models.Login
+@model LoginViewModel
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
 
 <div class="login-container">
     <div class="row">
-        <form method="" action="">
+        <form method="post">
             <div class="form-group">
                 <label class="control-label">Kullanıcı Tipi</label>
                 <div>
-                    <select>
-                        <option>Hasta</option>
-                        <option>Doktor</option>
-                        <option>Laborant</option>
+                    <select class="form-select" id="kullanicitipleri">
+                        @foreach (var item in Model.KullaniciTipleri)
+                        {
+                            <option value="@item.Id">@item.Isim</option>
+                        }
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">T.C. Kimlik Numarası</label>
                 <div>
-                    <input type="email" class="form-control" name="email" value="">
+                    <input class="form-control" asp-for="@Model.Uye.TcKimlikNo">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Şifre</label>
                 <div>
-                    <input id="password-field" type="password" class="form-control" name="password">
+                    <input id="password-field" type="password" class="form-control" asp-for="@Model.Uye.Sifre">
                     <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                 </div>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" asp-for="@Model.BeniHatirla"></input>
+                <label class="control-label">Beni Hatırla</label>
             </div>
             <div class="form-group d-flex justify-content-center" style="margin-bottom:0px">
                 <div>
@@ -37,8 +42,6 @@
     </div>
 </div>
 
-
-<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(".toggle-password").click(function () {
 

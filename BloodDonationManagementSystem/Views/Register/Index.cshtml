@@ -1,55 +1,75 @@
-﻿<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+﻿@using BloodDonationManagementSystem.Models.Register
+@model RegisterViewModel
 
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
 <link href="~/css/font-awesome.min.css" rel="stylesheet">
 
 <div class="login-container">
     <div class="row">
-        <form method="" action="">
+        <form method="post">
             <div class="form-group">
                 <label class="control-label">Kullanıcı Tipi</label>
                 <div>
-                    <select>
-                        <option>Hasta</option>
-                        <option>Doktor</option>
-                        <option>Laborant</option>
+                    <select class="form-select" id="kullanicitipleri">
+                        @foreach(var item in Model.KullaniciTipleri)
+                        {
+                            <option value="@item.Id">@item.Isim</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" id="bolumler" style="display:none">
+                <label class="control-label">Bölüm</label>
+                <div>
+                    <select class="form-select" id="bolumSelect" asp-for="@Model.BolumId">
+                        @foreach (var item in Model.Bolumler)
+                        {
+                            <option value="@item.Id">@item.Isim</option>
+                        }
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">T.C. Kimlik Numarası</label>
                 <div>
-                    <input type="email" class="form-control" name="email" value="">
+                    <input type="text" maxlength="11" class="form-control" asp-for="@Model.Uye.TcKimlikNo">
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.TcKimlikNo"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">İsim</label>
                 <div>
-                    <input type="text" class="form-control" name="email" value="">
+                    <input type="text" class="form-control" asp-for="@Model.Uye.Isim">
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.Isim"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Soyisim</label>
                 <div>
-                    <input type="text" class="form-control" name="email" value="">
+                    <input type="text" class="form-control" asp-for="@Model.Uye.Soyisim">
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.Soyisim"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Doğum Tarihi</label>
                 <div>
-                    <input type="date" class="form-control" name="email" value="">
+                    <input type="date" class="form-control" asp-for="@Model.Uye.DogumTarihi">
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.DogumTarihi"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Şifre</label>
                 <div>
-                    <input id="password-field" type="password" class="form-control" name="password">
+                    <input id="password-field" type="password" class="form-control" asp-for="@Model.Uye.Sifre">
                     <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.Sifre"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Telefon</label>
                 <div>
-                    <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required />
+                    <input asp-for="@Model.Uye.Telefon" class="form-control"/>
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.Telefon"></span>
                 </div>
             </div>
             <div class="form-group d-flex justify-content-center" style="margin-bottom:0px">
@@ -73,6 +93,18 @@
         } else {
             input.attr("type", "password");
         }
+    });
+
+    $("#kullanicitipleri").on('change', function () 
+    {
+        if ($("#kullanicitipleri").val() == 2) $("#bolumler").css('display', 'block');
+        else 
+        { 
+            $("#bolumler").css('display', 'none'); 
+            $("#bolumSelect").val(0);
+            console.log($("#bolumSelect").val());
+        }
+        
     });
 
     document.getElementById('phone').addEventListener('input', function (e) {
