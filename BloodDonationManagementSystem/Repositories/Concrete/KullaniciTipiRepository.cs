@@ -1,12 +1,31 @@
 ﻿using BloodDonationManagementSystem.Helpers;
 using BloodDonationManagementSystem.Mappers;
-using BloodDonationManagementSystem.Models.Register;
+using BloodDonationManagementSystem.Models;
+using BloodDonationManagementSystem.Models.Login;
 using Microsoft.Data.SqlClient;
 
 namespace BloodDonationManagementSystem.Repositories.Concrete
 {
     public class KullaniciTipiRepository : GenericRepository<KullaniciTipi>
     {
+        public KullaniciTipi Get(int Id)
+        {
+            using (var connection = SqlHelper.GetSqlConnection())
+            {
+                string query =
+                    "SELECT * FROM KullaniciTipi " +
+                    "WHERE Id = @id";
+
+                SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@Id", Id);
+                SqlDataReader reader = command.ExecuteReader();
+                KullaniciTipi kulaniciTipi = new();
+                if (reader.Read())
+                    kulaniciTipi = KullaniciTipiMapper.Map(reader);
+                return kulaniciTipi;
+            }
+        }
+
         public IEnumerable<KullaniciTipi> GetAll()
         {
             string query = "SELECT * FROM KullaniciTipi";

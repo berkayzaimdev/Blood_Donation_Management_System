@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BloodDonationManagementSystem.Models.Login;
+using BloodDonationManagementSystem.Helpers;
 
 namespace BloodDonationManagementSystem.Controllers
 {
     public class LoginController : Controller
     {
         private readonly KullaniciTipiRepository kullaniciTipiRepository;
+        private readonly UyeRepository uyeRepository;
 
-        public LoginController(KullaniciTipiRepository kullaniciTipiRepository)
+        public LoginController(KullaniciTipiRepository kullaniciTipiRepository, UyeRepository uyeRepository)
         {
             this.kullaniciTipiRepository = kullaniciTipiRepository;
+            this.uyeRepository = uyeRepository;
         }
 
         [HttpGet]
@@ -33,29 +36,23 @@ namespace BloodDonationManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                List<Claim> claims = new List<Claim>
+                var uye = uyeRepository.Get(model.Uye);
+                if(uye is null)
                 {
-                    new Claim(ClaimTypes.NameIdentifier, "testId"),
-                    new Claim(ClaimTypes.Name, "testUname"),
-                    new Claim(ClaimTypes.GivenName, "testName"),
-                    new Claim(ClaimTypes.Surname, "testSurname")
-                };
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    return RedirectToAction("Index", "Home");
+                }
+                var claims = AuthHelper.GetClaims(uye);
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProperties = new AuthenticationProperties
-                {
-                    IsPersistent = model.BeniHatirla
-                };
-
+                var authProperties = AuthHelper.GetAuthProperties(model.BeniHatirla);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
+                    claims,
                     authProperties);
                 return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> Logout() 
+        public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");

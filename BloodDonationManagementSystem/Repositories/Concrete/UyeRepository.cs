@@ -1,15 +1,21 @@
 ﻿using BloodDonationManagementSystem.Helpers;
 using BloodDonationManagementSystem.Mappers;
 using BloodDonationManagementSystem.Models;
+using BloodDonationManagementSystem.Models.Login;
 using BloodDonationManagementSystem.Models.Register;
 using Microsoft.Data.SqlClient;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BloodDonationManagementSystem.Repositories.Concrete
 {
     public class UyeRepository : GenericRepository<Uye>
     {
-        public bool Add(Uye uye,int bolumId) 
+        private readonly KullaniciTipiRepository kullaniciTipiRepository;
+        public UyeRepository(KullaniciTipiRepository kullaniciTipiRepository)
+        {
+            this.kullaniciTipiRepository = kullaniciTipiRepository;
+        }
+
+        public bool Add(RegisterUyeViewModel uye,int bolumId) 
         {
             using (var connection = SqlHelper.GetSqlConnection())
             {
@@ -22,7 +28,7 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
                 command.Parameters.AddWithValue("@TcKimlikNo", uye.TcKimlikNo);
                 command.Parameters.AddWithValue("@Isim", uye.Isim);
                 command.Parameters.AddWithValue("@Soyisim", uye.Soyisim);
-                command.Parameters.AddWithValue("@Yas", (DateTime.Now.Year)-(uye.DogumTarihi.Value.Year));
+                command.Parameters.AddWithValue("@Yas", (DateTime.Now.Year)-(uye.DogumTarihi.Year));
                 command.Parameters.AddWithValue("@Sifre", uye.TcKimlikNo);
                 command.Parameters.AddWithValue("@Telefon", uye.Isim);
                 int uyeId = Convert.ToInt32(command.ExecuteScalar());
@@ -39,6 +45,26 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
                 }
             }
             return true;
+        }
+
+        public Uye Get(LoginUyeViewModel uye)
+        {
+            using (var connection = SqlHelper.GetSqlConnection())
+            {
+                string query =
+                    "SELECT * FROM Uye " +
+                    "WHERE TcKimlikNo = @TcKimlikNo AND Sifre = @Sifre AND KullaniciTipiId = @KullaniciTipiId";
+
+                SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@TcKimlikNo", uye.TcKimlikNo);
+                command.Parameters.AddWithValue("@Sifre", uye.Sifre);
+                command.Parameters.AddWithValue("@KullaniciTipiId", uye.KullaniciTipiId);
+                SqlDataReader reader = command.ExecuteReader();
+                Uye loggerUye = new();
+                if(reader.Read())
+                    loggerUye = UyeMapper.Map(reader, kullaniciTipiRepository);
+                return loggerUye;
+            }
         }
     }
 }

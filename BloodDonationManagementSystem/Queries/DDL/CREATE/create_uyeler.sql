@@ -5,5 +5,7 @@ CREATE TABLE Uye(
    Soyisim varchar(50),
    Yas varchar(3),
    Sifre varchar(100),
-   Telefon varchar(9) CHECK(Telefon='__________')  UNIQUE
+   Telefon varchar(9) CHECK(Telefon='__________')  UNIQUE,
+   KullaniciTipiId int,
+   FOREIGN KEY(KullaniciTipiId) REFERENCES KullaniciTipi(Id)
 );

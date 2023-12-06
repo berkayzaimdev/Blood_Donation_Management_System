@@ -2,7 +2,6 @@
 @model RegisterViewModel
 
 <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
-<link href="~/css/font-awesome.min.css" rel="stylesheet">
 
 <div class="login-container">
     <div class="row">
@@ -10,7 +9,7 @@
             <div class="form-group">
                 <label class="control-label">Kullanıcı Tipi</label>
                 <div>
-                    <select class="form-select" id="kullanicitipleri">
+                    <select class="form-select" id="kullanicitipleri" asp-for="KullaniciTipiId">
                         @foreach(var item in Model.KullaniciTipleri)
                         {
                             <option value="@item.Id">@item.Isim</option>
@@ -18,10 +17,21 @@
                     </select>
                 </div>
             </div>
+            <div class="form-group" id="kangruplari">
+                <label class="control-label">Kan Grubu</label>
+                <div>
+                    <select class="form-select" id="kangrubuSelect" asp-for="KanGrubuId">
+                        @foreach (var item in Model.KanGruplari)
+                        {
+                            <option value="@item.Id">@(item.Isim + " Rh" + item.Rh)</option>
+                        }
+                    </select>
+                </div>
+            </div>
             <div class="form-group" id="bolumler" style="display:none">
                 <label class="control-label">Bölüm</label>
                 <div>
-                    <select class="form-select" id="bolumSelect" asp-for="@Model.BolumId">
+                    <select class="form-select" id="bolumSelect" asp-for="BolumId">
                         @foreach (var item in Model.Bolumler)
                         {
                             <option value="@item.Id">@item.Isim</option>
@@ -32,22 +42,29 @@
             <div class="form-group">
                 <label class="control-label">T.C. Kimlik Numarası</label>
                 <div>
-                    <input type="text" maxlength="11" class="form-control" asp-for="@Model.Uye.TcKimlikNo">
-                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.TcKimlikNo"></span>
+                    <input type="text" maxlength="11" class="form-control" asp-for="Uye.TcKimlikNo">
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="Uye.TcKimlikNo"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">İsim</label>
                 <div>
                     <input type="text" class="form-control" asp-for="@Model.Uye.Isim">
-                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.Isim"></span>
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="Uye.Isim"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Soyisim</label>
                 <div>
                     <input type="text" class="form-control" asp-for="@Model.Uye.Soyisim">
-                    <span class="label label-danger" style="color:red !important" asp-validation-for="@Model.Uye.Soyisim"></span>
+                    <span class="label label-danger" style="color:red !important" asp-validation-for="Uye.Soyisim"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Cinsiyet</label>
+                <div>
+                    <input type="radio" name="cinsiyet" asp-for="Uye.Cinsiyet" value="K"> <label>Kadın</label>
+                    <input type="radio" name="cinsiyet" asp-for="Uye.Cinsiyet" value="E"> <label>Erkek</label>
                 </div>
             </div>
             <div class="form-group">
@@ -102,7 +119,12 @@
         { 
             $("#bolumler").css('display', 'none'); 
             $("#bolumSelect").val(0);
-            console.log($("#bolumSelect").val());
+        }
+
+        if ($("#kullanicitipleri").val() == 1) $("#kangruplari").css('display', 'block');
+        else {
+            $("#kangruplari").css('display', 'none');
+            $("#kangrubuSelect").val(0);
         }
         
     });

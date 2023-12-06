@@ -1,9 +1,8 @@
 ﻿namespace BloodDonationManagementSystem.Models
 {
-    public class Uye
+    public class Doktor
     {
         public int Id { get; set; }
-        public KullaniciTipi KullaniciTipi { get; set; }
         public string TcKimlikNo { get; set; }
         public string Isim { get; set; }
         public string Soyisim { get; set; }

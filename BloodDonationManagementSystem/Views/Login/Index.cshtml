@@ -8,7 +8,7 @@
             <div class="form-group">
                 <label class="control-label">Kullanıcı Tipi</label>
                 <div>
-                    <select class="form-select" id="kullanicitipleri">
+                    <select class="form-select" id="kullanicitipleri" asp-for="Uye.KullaniciTipiId">
                         @foreach (var item in Model.KullaniciTipleri)
                         {
                             <option value="@item.Id">@item.Isim</option>
@@ -19,13 +19,13 @@
             <div class="form-group">
                 <label class="control-label">T.C. Kimlik Numarası</label>
                 <div>
-                    <input class="form-control" asp-for="@Model.Uye.TcKimlikNo">
+                    <input class="form-control" maxlength="11" asp-for="Uye.TcKimlikNo">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Şifre</label>
                 <div>
-                    <input id="password-field" type="password" class="form-control" asp-for="@Model.Uye.Sifre">
+                    <input id="password-field" type="password" class="form-control" asp-for="Uye.Sifre">
                     <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                 </div>
             </div>

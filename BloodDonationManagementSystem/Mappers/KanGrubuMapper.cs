@@ -3,14 +3,15 @@ using Microsoft.Data.SqlClient;
 
 namespace BloodDonationManagementSystem.Mappers
 {
-    public class BolumMapper
+    public class KanGrubuMapper
     {
-        public static Bolum Map(SqlDataReader reader)
+        public static KanGrubu Map(SqlDataReader reader)
         {
-            return new Bolum
+            return new KanGrubu
             {
                 Id = (int)reader["Id"],
-                Isim = (string)reader["Isim"]
+                Isim = (string)reader["Isim"],
+                Rh = (reader["Rh"]).ToString()
             };
         }
     }

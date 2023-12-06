@@ -1,3 +1,29 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿<link rel="stylesheet" href="~/css/home.css" />
+@using System.Security.Claims
+@{
+    var roleClaim = User.FindFirst(ClaimTypes.Role);
+    string roleIcon;
+    switch (roleClaim?.Value)
+    {
+        case "Hasta":
+            roleIcon = "<i class='fa fa-user'></i>";
+            break;
+
+        case "Doktor":
+            roleIcon = "<i class='fa fa-user-md'></i>";
+            break;
+
+        case "Laborant":
+            roleIcon = "<i class='fa fa-flask'></i>";
+            break;
+
+        default:
+            roleIcon = "";
+            break;
+    }
+}
+
+@if (roleClaim != null)
+{
+    @await Component.InvokeAsync(roleClaim.Value)
 }

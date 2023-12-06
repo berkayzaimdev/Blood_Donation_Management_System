@@ -1,4 +1,4 @@
-﻿namespace BloodDonationManagementSystem.Models.Register
+﻿namespace BloodDonationManagementSystem.Models
 {
     public class KullaniciTipi
     {

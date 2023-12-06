@@ -1,4 +1,4 @@
-﻿using BloodDonationManagementSystem.Models.Register;
+﻿using BloodDonationManagementSystem.Models;
 using Microsoft.Data.SqlClient;
 
 namespace BloodDonationManagementSystem.Mappers

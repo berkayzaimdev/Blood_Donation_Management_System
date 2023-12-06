@@ -14,11 +14,13 @@ namespace BloodDonationManagementSystem.Controllers
         private readonly BolumRepository bolumRepository;
         private readonly KullaniciTipiRepository kullaniciTipiRepository;
         private readonly UyeRepository uyeRepository;
-        public RegisterController(BolumRepository bolumRepository, KullaniciTipiRepository kullaniciTipiRepository, UyeRepository uyeRepository)
+        private readonly KanGrubuRepository kanGrubuRepository;
+        public RegisterController(BolumRepository bolumRepository, KullaniciTipiRepository kullaniciTipiRepository, UyeRepository uyeRepository, KanGrubuRepository kanGrubuRepository)
         {
             this.bolumRepository = bolumRepository;
             this.kullaniciTipiRepository = kullaniciTipiRepository;
             this.uyeRepository = uyeRepository;
+            this.kanGrubuRepository = kanGrubuRepository;
         }
 
         [HttpGet]
@@ -27,7 +29,8 @@ namespace BloodDonationManagementSystem.Controllers
             var model = new RegisterViewModel
             {
                 Bolumler = bolumRepository.GetAll(),
-                KullaniciTipleri = kullaniciTipiRepository.GetAll()
+                KullaniciTipleri = kullaniciTipiRepository.GetAll(),
+                KanGruplari = kanGrubuRepository.GetAll()
             };
             return View(model);
         }
