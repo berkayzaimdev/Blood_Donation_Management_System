@@ -86,7 +86,46 @@
 
 
 <div class="menu-container">
-    <button type="button" id="talep" class="menu-item" data-toggle="modal" data-target="#talepEtModal"><i class="fa fa-file-text" aria-hidden="true"></i> AKTİF TALEPLER</button>
-    <button type="button" id="talepGetir" class="menu-item" data-toggle="modal" data-target="#talepGoruntuleModal"><i class="fa fa-file-text" aria-hidden="true"></i> ONAY BEKLEYEN TALEPLER</button>
-    <button type="button" id="talep" class="menu-item" data-toggle="modal" data-target="#testGoruntuleModal"><i class="fa fa-flask" aria-hidden="true"></i> HASTALARIM</button>
+    <button type="button" id="talepGetir" class="menu-item" data-toggle="modal" data-target="#talepModal"><i class="fa fa-file-text" aria-hidden="true"></i> AKTİF TALEPLER</button>
+    <button type="button" id="onayTalepGetir" class="menu-item" data-toggle="modal" data-target="#onayTalepModal"><i class="fa fa-clock-o" aria-hidden="true"></i> ONAY BEKLEYEN TALEPLER</button>
+    <button type="button" id="talep" class="menu-item" data-toggle="modal" data-target="#testGoruntuleModal"><i class="fa fa-heart" aria-hidden="true"></i> KAN BAĞIŞI</button>
 </div>
+
+<div class="modal fade scrollableModal" id="talepModal" tabindex="-1" role="dialog" aria-labelledby="talepModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="talepModalLabel">Aktif Talepler</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Talep Tarihi</th>
+                            <th scope="col">Hasta</th>
+                            <th scope="col">Talep Nedeni</th>
+                            <th colspan="2" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="talepler">
+                        <tr>
+                            <td>Talep Tarihi</td>
+                            <td>Hasta</td>
+                            <td>Talep Nedeni</td>
+                            <td><button class="btn btn-success">Teste Gönder</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script>
+
+</script>
