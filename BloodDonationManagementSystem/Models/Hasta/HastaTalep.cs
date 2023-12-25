@@ -13,9 +13,11 @@ namespace BloodDonationManagementSystem.Models.Hasta
             Donor,
             Tamamlandi
         }
-
-        public TalepDoktor Doktor { get; set; }
+        public int? Id { get; set; }
+        public Hasta Hasta { get; set; }
+        public TalepDoktor? Doktor { get; set; }
         public string TalepTarihi { get; set; }
         public Durum TalepDurumu { get; set; }
+        public string? TalepNedeni { get; set; }
     }
 }

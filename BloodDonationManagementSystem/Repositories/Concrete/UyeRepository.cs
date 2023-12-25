@@ -2,6 +2,7 @@
 using BloodDonationManagementSystem.Mappers;
 using BloodDonationManagementSystem.Models;
 using BloodDonationManagementSystem.Models.Doktor;
+using BloodDonationManagementSystem.Models.Hasta;
 using BloodDonationManagementSystem.Models.Login;
 using BloodDonationManagementSystem.Models.Register;
 using Microsoft.Data.SqlClient;
@@ -104,6 +105,24 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
                 if (reader.Read())
                     talepDoktor = TalepDoktorMapper.Map(reader, bolumRepository);
                 return talepDoktor;
+            }
+        }
+
+        public Hasta GetHastaById(int Id)
+        {
+            using (var connection = SqlHelper.GetSqlConnection())
+            {
+                string query =
+                   "SELECT * FROM Uye " +
+                   "WHERE Id = @Id";
+
+                SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@Id", Id);
+                SqlDataReader reader = command.ExecuteReader();
+                Hasta hasta = new();
+                if (reader.Read())
+                    hasta = HastaMapper.Map(reader);
+                return hasta;
             }
         }
     }

@@ -1,6 +1,9 @@
-﻿using BloodDonationManagementSystem.Repositories.Concrete;
+﻿using BloodDonationManagementSystem.Models.Hasta;
+using BloodDonationManagementSystem.Repositories.Concrete;
 using BloodDonationManagementSystem.ViewComponents.Hasta;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace BloodDonationManagementSystem.ViewComponents.Doktor
 {

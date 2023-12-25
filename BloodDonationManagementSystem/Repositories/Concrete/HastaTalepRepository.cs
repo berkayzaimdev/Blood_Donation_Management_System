@@ -70,6 +70,27 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
             return items;
         }
 
+        public IEnumerable<HastaTalep> GetAllByDoktorId(int doktorId)
+        {
+            string query = "SELECT * FROM HastaTalep WHERE DoktorId = @DoktorId";
+            var items = new List<HastaTalep>();
+            using (var connection = SqlHelper.GetSqlConnection())
+            {
+                SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@DoktorId", doktorId);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    HastaTalep item = HastaTalepMapper.Map(reader);
+                    item.Hasta = uyeRepository.GetHastaById((int)reader["HastaId"]);
+                    item.TalepNedeni = (string)reader["TalepNedeni"];
+                    item.Id = (int)reader["Id"];
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
         private static Durum GetTalepDurumuById(int Id)
         {
             string query =

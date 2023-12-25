@@ -127,5 +127,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script>
+    $("#talepGetir").click(function (e) {
+        $.ajax({
+            type: "POST",
+            url: "/Doktor/TalepGetir",
+            success: function (data) {
+                updateModal(JSON.parse(data));
+            },
+            error: function (error) {
+                console.error("Error fetching data:", error);
+            }
+        });
+    });
 
+    function updateModal(data) {
+
+        var modalBody = $("#talepModal").find("#talepler");
+        console.log(modalBody);
+        modalBody.empty();
+        console.log(data);
+        data.forEach(function (item, index) {
+            modalBody.append("<tr><td>" + item.TalepTarihi + "</td><td>" + item.Hasta.Isim + " " + item.Hasta.Soyisim + "</td><td>" + item.TalepNedeni + "</td> <td><button class='btn btn-success'>Teste Gönder</button></td></tr>");
+        });
+    }
 </script>
