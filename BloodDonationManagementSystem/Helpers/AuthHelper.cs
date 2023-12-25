@@ -18,7 +18,7 @@ namespace BloodDonationManagementSystem.Helpers
         {
             List<Claim> claims = new List<Claim>
                 {
-                    new(ClaimTypes.NameIdentifier, uye.TcKimlikNo),
+                    new(ClaimTypes.NameIdentifier, uye.Id.ToString()),
                     new(ClaimTypes.Name, uye.Isim+" "+uye.Soyisim),
                     new(ClaimTypes.Role, uye.KullaniciTipi.Isim)
                 };

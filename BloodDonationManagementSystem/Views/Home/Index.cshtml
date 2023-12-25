@@ -25,5 +25,5 @@
 
 @if (roleClaim != null)
 {
-    @await Component.InvokeAsync(roleClaim.Value)
+    @await Component.InvokeAsync(roleClaim.Value, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)))
 }

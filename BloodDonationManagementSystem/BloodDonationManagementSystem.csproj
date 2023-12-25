@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Donor\" />
     <Folder Include="Repositories\Abstract\" />
   </ItemGroup>
 

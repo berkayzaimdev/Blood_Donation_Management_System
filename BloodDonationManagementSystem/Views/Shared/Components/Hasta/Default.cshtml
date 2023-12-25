@@ -2,45 +2,113 @@
 @model HastaViewComponentViewModel
 
 <link rel="stylesheet" href="~/css/home.css" />
-@* <style>
-    .menu-container {
-        display: flex;
+<style>
+    label {
+        font-family: Calibri;
+        font-weight: bold;
+        font-size: 20px
     }
 
-    .menu-item {
-        margin-right: 20px;
-        text-decoration: none;
-        color: inherit;
-        cursor: pointer;
+    /*--thank you pop starts here--*/
+    .thank-you-pop {
+        width: 100%;
+        padding: 20px;
+        text-align: center;
     }
 
-        .menu-item span {
-            margin-left: 5px;
+        .thank-you-pop img {
+            width: 76px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 25px;
         }
-</style> *@
+
+        .thank-you-pop h1 {
+            font-size: 42px;
+            margin-bottom: 25px;
+            color: #5C5C5C;
+        }
+
+        .thank-you-pop p {
+            font-size: 20px;
+            margin-bottom: 27px;
+            color: #5C5C5C;
+        }
+
+        .thank-you-pop h3.cupon-pop {
+            font-size: 25px;
+            margin-bottom: 40px;
+            color: #222;
+            display: inline-block;
+            text-align: center;
+            padding: 10px 20px;
+            border: 2px dashed #222;
+            clear: both;
+            font-weight: normal;
+        }
+
+            .thank-you-pop h3.cupon-pop span {
+                color: #03A9F4;
+            }
+
+        .thank-you-pop a {
+            display: inline-block;
+            margin: 0 auto;
+            padding: 9px 20px;
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 14px;
+            background-color: #8BC34A;
+            border-radius: 17px;
+        }
+
+            .thank-you-pop a i {
+                margin-right: 5px;
+                color: #fff;
+            }
+
+    #ignismyModal .modal-header {
+        border: 0px;
+    }
+
+    .scrollableModal .modal-body {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    #testDetayModal .modal-dialog {
+        max-width: 800px; 
+    }
+
+    #testDetayModal .modal-body {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+</style>
 
 
 <div class="menu-container">
-    <button type="button" class="menu-item" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-medkit" aria-hidden="true"></i> KAN TALEP ET</button>
-    <div class="menu-item"><i class="fa fa-file-text" aria-hidden="true"></i> TALEP GEÇMİŞİM</div>
-    <div class="menu-item"><i class="fa fa-flask" aria-hidden="true"></i> TEST SONUÇLARIM</div>
+    <button type="button" id="talep" class="menu-item" data-toggle="modal" data-target="#talepEtModal"><i class="fa fa-medkit" aria-hidden="true"></i> KAN TALEP ET</button>
+    <button type="button" id="talepGetir" class="menu-item" data-toggle="modal" data-target="#talepGoruntuleModal"><i class="fa fa-file-text" aria-hidden="true"></i> TALEP GEÇMİŞİM</button>
+    <button type="button" id="talep" class="menu-item" data-toggle="modal" data-target="#testGoruntuleModal"><i class="fa fa-flask" aria-hidden="true"></i> TEST SONUÇLARIM</button>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="talepEtModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Kan Talebi</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="closer" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form>
+            <form id="kanTalebiForm">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="bolum">Bölüm</label>
                         <select class="form-control" id="bolum">
-                            @foreach(var item in Model.Bolumler)
+                            @foreach (var item in Model.Bolumler)
                             {
                                 <option value="@item.Id">@item.Isim</option>
                             }
@@ -51,9 +119,16 @@
                         <select class="form-control" id="doktor">
                             @foreach (var item in Model.Bolumler.First().Doktorlar)
                             {
-                                <option>@item.Isim</option>
+                                <option value="@item.Id">@item.Isim @item.Soyisim</option>
                             }
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="doktorBilgileri">Doktor Bilgileri</label>
+                        <div id="doktorBilgileri">
+                            Yaş: <span id="doktorYas">@Model.Bolumler.First().Doktorlar.First().Yas</span><br />
+                            Telefon Numarası: <span id="doktorTelefon">@Model.Bolumler.First().Doktorlar.First().Telefon</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="talepNedeni">Talep Nedeni</label>
@@ -62,53 +137,251 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-                    <button type="submit" class="btn btn-primary">Gönder</button>
+                    <button type="submit" class="btn btn-primary" id="gonderButton">Gönder</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<div class="modal fade scrollableModal" id="talepGoruntuleModal" tabindex="-1" role="dialog" aria-labelledby="talepGoruntuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="talepGoruntuleModalLabel">Talep Geçmişim</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Talep Tarihi</th>
+                            <th scope="col">Bölüm</th>
+                            <th scope="col">Doktor</th>
+                            <th scope="col">Talep Durumu</th>
+                            <th scope="col">Detay</th>
+                        </tr>
+                    </thead>
+                    <tbody id="talepler">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade scrollableModal" id="testGoruntuleModal" tabindex="-1" role="dialog" aria-labelledby="testGoruntuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="talepGoruntuleModalLabel">Scrollable Table</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Test Tarihi</th>
+                            <th scope="col">Talep Detayı</th>
+                            <th scope="col">Laborant</th>
+                            <th scope="col">Test Detayı</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < 10; i++)
+                        {
+                            <tr>
+                                <td>$i</td>
+                                <td>First$i</td>
+                                <td>
+                                    <i class="fa fa-hourglass-start" aria-hidden="true" title="Doktor incelemesi bekleniyor."></i>
+                                </td>
+                                <td>
+                                    <button style="padding: 0;border: none;background: none;" id="test" data-toggle="modal" data-target="#testDetayModal">
+                                        <i class="fa fa-hourglass-start" aria-hidden="true" title="Doktor incelemesi bekleniyor."></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade scrollableModal" id="testDetayModal" tabindex="-1" role="dialog" aria-labelledby="testDetayModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="testDetayModalLabel">Test Scrollable Table</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">CRP</th>
+                            <th scope="col">Alanin Aminotransferaz</th>
+                            <th scope="col">Aspartat Aminotransferaz</th>
+                            <th scope="col">Glukoz</th>
+                            <th scope="col">Kreatinin</th>
+                            <th scope="col">Kreatinin Kinaz</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CRP</td>
+                            <td>AlaninAminotransferaz</td>
+                            <td>AspartatAminotransferaz</td>
+                            <td>Glukoz</td>
+                            <td>Kreatinin</td>
+                            <td>KreatininKinaz$i</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-
 <script>
-    $(document).ready(function () {
-        // Add change event handler to the Bolum dropdown
+    $(document).ready(function () 
+    {
         $("#bolum").change(function () {
-            // Get the selected Bolum value
             var selectedBolum = $(this).val();
-
-            // Find the corresponding Bolum in the Model.Bolumler array
             var selectedBolumObj = null;
-
-            // Use JSON to serialize the server-side model and make it accessible in JavaScript
             var bolumler = @Html.Raw(Json.Serialize(Model.Bolumler));
-            console.log(selectedBolum);
 
             for (var i = 0; i < bolumler.length; i++) {
-                console.log(bolumler[i].Id);
                 if (bolumler[i].id == selectedBolum) {
                     selectedBolumObj = bolumler[i];
                     break;
                 }
             }
-            console.log(selectedBolumObj);
-            // Clear current options in Doktor dropdown
+
             $("#doktor").empty();
 
-            // Populate Doktor dropdown with the Doktorlar of the selected Bolum
+            $.each(selectedBolumObj.doktorlar, function (index, doktor) {
+                $("#doktor").append('<option value=' + doktor.id + '>' + doktor.isim + ' ' + doktor.soyisim + '</option>');
+            });
 
-                $.each(selectedBolumObj.doktorlar, function (index, doktor) {
-                    console.log(doktor);
-                    $("#doktor").append('<option>' + doktor.isim + ' ' + doktor.soyisim + '</option>');
-                });
-                console.log("test");
-                
-            
-            
+            var firstDoktor = selectedBolumObj.doktorlar[0];
+            console.log(firstDoktor);
+            $("#doktorYas").text(firstDoktor.yas);
+            $("#doktorTelefon").text(firstDoktor.telefon);
         });
+
+        $("#doktor").change(function () {
+            var selectedDoktorId = $(this).val();
+            var selectedBolum = $('#bolum').val();
+            var selectedDoktor = null;
+            var selectedBolumObj = null;
+            var bolumler = @Html.Raw(Json.Serialize(Model.Bolumler));
+
+            for (var i = 0; i < bolumler.length; i++) {
+                if (bolumler[i].id == selectedBolum) {
+                    selectedBolumObj = bolumler[i];
+                    break;
+                }
+            }
+
+            var doktorlar = selectedBolumObj.doktorlar;
+
+            for (var i = 0; i < doktorlar.length; i++) {
+                if (doktorlar[i].id == selectedDoktorId) {
+                    selectedDoktor = doktorlar[i];
+                    break;
+                }
+            }
+            console.log(selectedDoktor);
+            $("#doktorYas").text(selectedDoktor.yas);
+            $("#doktorTelefon").text(selectedDoktor.telefon);
+        });
+
+        $("#gonderButton").click(function (e) {
+            e.preventDefault();
+            var selectedDoktorId = $("#doktor").val();
+            var talepNedeni = $("#talepNedeni").val();
+
+            var dataToSend = {
+                doktorId: selectedDoktorId,
+                talepNedeni: talepNedeni
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/Hasta/TalepGonder",
+                data: dataToSend,
+                success: function (response) {
+                    alert("Talep gönderildi!");
+                    $("#closer").click();
+                    $("#talepNedeni").val('');
+                    console.log(response);
+                },
+                error: function (error) {
+                    $("#ignisMyModal").modal('show');
+                    console.log($("#ignisMyModal"));
+                    console.log(error);
+                }
+            });
+        });
+
+        $("#talepGetir").click(function (e) 
+        {
+            $.ajax({
+                type: "POST",
+                url: "/Hasta/TalepGetir",
+                success: function (data) 
+                {
+                    updateModal(JSON.parse(data));
+                },
+                error: function (error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
+        });
+
+        function updateModal(data) {
+
+            var modalBody = $("#talepGoruntuleModal").find("#talepler");
+            console.log(modalBody);
+            modalBody.empty();
+            console.log(data);
+            data.forEach(function (item, index) {
+                var icontitle = getIcon(item.TalepDurumu);
+                modalBody.append("<tr><td>" + item.TalepTarihi + "</td><td>" + item.Doktor.Bolum + "</td><td>" + item.Doktor.Isim + " " + item.Doktor.Soyisim + "</td><td><i class='" + icontitle[0] +"' aria-hidden='true' title='"+icontitle[1]+"'></i></td><td><i class='fa fa-info-circle' aria-hidden='true'></i></td></tr>");
+            });
+
+            function getIcon(talepDurum) 
+            {
+                switch (talepDurum) 
+                {
+                    case 0:
+                        return ["fa fa-hourglass-start", "Doktor incelemesi bekleniyor..."];
+                    case 1:
+                        return ["fa fa-flask", "Test bekleniyor..."];
+                    case 2:
+                        return ["fa fa-hourglass-half", "Doktor onayı bekleniyor..."];
+                    case 3:
+                        return ["fa fa-cross", "Doktor onayı yok"];
+                    case 4:
+                        return ["fa fa-tint", "Donör bekleniyor..."];
+                    case 5:
+                        return ["fa fa-heart", "Bağış tamamlandı."];
+                }
+            }
+        }
     });
+
 </script>

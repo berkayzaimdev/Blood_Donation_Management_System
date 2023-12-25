@@ -7,7 +7,7 @@
         public string TcKimlikNo { get; set; }
         public string Isim { get; set; }
         public string Soyisim { get; set; }
-        public int Yas { get; set; }
+        public string Yas { get; set; }
         public string Telefon { get; set; }
     }
 }

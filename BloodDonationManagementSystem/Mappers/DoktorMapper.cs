@@ -1,5 +1,4 @@
-﻿using BloodDonationManagementSystem.Models;
-using BloodDonationManagementSystem.Repositories.Concrete;
+﻿using BloodDonationManagementSystem.Models.Doktor;
 using Microsoft.Data.SqlClient;
 
 namespace BloodDonationManagementSystem.Mappers
@@ -14,7 +13,8 @@ namespace BloodDonationManagementSystem.Mappers
                 TcKimlikNo = (string)reader["TcKimlikNo"],
                 Isim = (string)reader["Isim"],
                 Soyisim = (string)reader["Soyisim"],
-                Telefon = (string)reader["Telefon"]
+                Telefon = (string)reader["Telefon"],
+                Yas = Convert.ToInt16((string)reader["Yas"])
             };
         }
     }

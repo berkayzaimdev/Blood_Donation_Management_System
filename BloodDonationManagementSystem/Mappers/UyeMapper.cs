@@ -6,15 +6,16 @@ namespace BloodDonationManagementSystem.Mappers
 {
     public class UyeMapper
     {
-        public static Uye Map(SqlDataReader reader,KullaniciTipiRepository kullaniciTipiRepository)
+        public static Uye Map(SqlDataReader reader)
         {
             return new Uye
             {
+                Id = (int)reader["Id"],
                 TcKimlikNo = (string)reader["TcKimlikNo"],
                 Isim = (string)reader["Isim"],
                 Soyisim = (string)reader["Soyisim"],
                 Telefon = (string)reader["Telefon"],
-                KullaniciTipi = kullaniciTipiRepository.Get((int)reader["KullaniciTipiId"])
+                Yas = (string)reader["Yas"]
             };
         }
     }

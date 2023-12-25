@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string Isim { get; set; }
-        public IEnumerable<Doktor> Doktorlar { get; set; }
+        public IEnumerable<Doktor.Doktor> Doktorlar { get; set; }
     }
 }

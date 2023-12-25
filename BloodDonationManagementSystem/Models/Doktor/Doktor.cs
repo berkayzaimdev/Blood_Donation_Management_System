@@ -1,4 +1,4 @@
-﻿namespace BloodDonationManagementSystem.Models
+﻿namespace BloodDonationManagementSystem.Models.Doktor
 {
     public class Doktor
     {

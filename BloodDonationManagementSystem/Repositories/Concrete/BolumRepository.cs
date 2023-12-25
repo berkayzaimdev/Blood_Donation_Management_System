@@ -1,6 +1,7 @@
 ﻿using BloodDonationManagementSystem.Helpers;
 using BloodDonationManagementSystem.Mappers;
 using BloodDonationManagementSystem.Models;
+using BloodDonationManagementSystem.Models.Doktor;
 using Microsoft.Data.SqlClient;
 
 namespace BloodDonationManagementSystem.Repositories.Concrete
@@ -54,6 +55,24 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
             }
 
             return doctors;
+        }
+
+        public string GetBolumNameOfDoktor(int doktorId)
+        {
+            string query = "SELECT Bolum.Isim FROM Bolum " +
+                   "JOIN DoktorBolum ON DoktorBolum.BolumId = Bolum.Id " +
+                   "WHERE DoktorBolum.DoktorId = @DoktorId";
+
+            using (var connection = SqlHelper.GetSqlConnection())
+            {
+                SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@DoktorId", doktorId);
+                SqlDataReader reader = command.ExecuteReader();
+                string result="";
+                if (reader.Read())
+                    result = (string)reader["Isim"];
+                return result;
+            }
         }
     }
 }
