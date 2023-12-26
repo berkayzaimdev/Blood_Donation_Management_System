@@ -19,8 +19,15 @@ namespace BloodDonationManagementSystem.Controllers
         public JsonResult TalepGetir()
         {
             var doktorId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            IEnumerable<HastaTalep> talepler = hastaTalepRepository.GetAllByDoktorId(doktorId);
+            IEnumerable<HastaTalep> talepler = hastaTalepRepository.GetAllBekleyenByDoktorId(doktorId);
             return Json(JsonSerializer.Serialize(talepler));
+        }
+
+        [HttpPost]
+        public JsonResult TesteGonder(int talepId)
+        {
+            hastaTalepRepository.AddToBekleyenTalep(talepId);
+            return Json(new {});
         }
     }
 }

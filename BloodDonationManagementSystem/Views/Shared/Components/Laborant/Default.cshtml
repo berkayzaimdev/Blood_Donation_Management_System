@@ -86,9 +86,8 @@
 
 
 <div class="menu-container">
-    <button type="button" id="talepGetir" class="menu-item" data-toggle="modal" data-target="#talepModal"><i class="fa fa-file-text" aria-hidden="true"></i> AKTİF TALEPLER</button>
-    <button type="button" id="onayTalepGetir" class="menu-item" data-toggle="modal" data-target="#onayTalepModal"><i class="fa fa-clock-o" aria-hidden="true"></i> ONAY BEKLEYEN TALEPLER</button>
-    <button type="button" id="talep" class="menu-item" data-toggle="modal" data-target="#testGoruntuleModal"><i class="fa fa-heart" aria-hidden="true"></i> KAN BAĞIŞI</button>
+    <button type="button" id="talepGetir" class="menu-item" data-toggle="modal" data-target="#talepModal"><i class="fa fa-clock-o" aria-hidden="true"></i> TEST BEKLEYEN TALEPLER</button>
+    <button type="button" id="talep" class="menu-item" data-toggle="modal" data-target="#testGoruntuleModal"><i class="fa fa-flask" aria-hidden="true"></i> YAPTIĞIM TESTLER</button>
 </div>
 
 <div class="modal fade scrollableModal" id="talepModal" tabindex="-1" role="dialog" aria-labelledby="talepModalLabel" aria-hidden="true">
@@ -118,13 +117,106 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-labelledby="testModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="talepModalLabel">Deneme</h5>
+            </div>
+            <div class="modal-body">
+                <input style="align:center" type="range" id="rangeInput" name="rangeInput" min="1" max="100">
+                <br />
+                <span>CRP:</span> <span>123</span> <span>mg/L</span>
+                <br />
+                <button>Devam</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="range" id="rangeInput" name="rangeInput" min="1" max="100">
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script>
+    var currentStep = 1;
+
+    $("#testButton").click(function () {
+        // Show the first step
+        showStep(currentStep);
+        // Show modal
+        $("#testModal").css("display", "block");
+    });
+
+    $(".close").click(function () {
+        // Hide modal
+        $("#testModal").css("display", "none");
+        // Reset to the first step
+        currentStep = 1;
+    });
+
+    $(".nextStep").click(function () {
+        // Validate and proceed to the next step
+        if (validateStep(currentStep)) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+
+    $("#submitBtn").click(function () {
+        // Collect values for all blood tests
+        var data = {};
+        $(".step input").each(function () {
+            var testName = $(this).attr("name");
+            var testValue = $(this).val();
+            data[testName] = testValue;
+        });
+
+        // Send data to controller using AJAX
+        $.ajax({
+            type: "POST",
+            url: "your_controller_url",
+            data: data,
+            success: function (response) {
+                // Handle success
+                console.log(response);
+                // Close the modal
+                $("#testModal").css("display", "none");
+                // Reset to the first step
+                currentStep = 1;
+            },
+            error: function (error) {
+                // Handle error
+                console.log(error);
+            }
+        });
+    });
+
+    function showStep(step) {
+        $(".step").hide();
+        $("#step" + step).show();
+    }
+
+    function validateStep(step) {
+        // Add your validation logic here
+        // For simplicity, assuming all inputs are required
+        var isValid = true;
+        $("#step" + step + " input").each(function () {
+            if ($(this).val() === "") {
+                isValid = false;
+                alert("Please fill in all fields.");
+                return false; // Exit loop on first empty field
+            }
+        });
+        return isValid;
+    }
+
     $("#talepGetir").click(function (e) {
         $.ajax({
             type: "POST",
-            url: "/Doktor/TalepGetir",
+            url: "/Laborant/TalepGetir",
             success: function (data) {
                 updateModal(JSON.parse(data));
             },
@@ -141,23 +233,12 @@
         modalBody.empty();
         console.log(data);
         data.forEach(function (item, index) {
-            modalBody.append("<tr><td>" + item.TalepTarihi + "</td><td>" + item.Hasta.Isim + " " + item.Hasta.Soyisim + "</td><td>" + item.TalepNedeni + "</td> <td><button type='submit' id='testeGonder' class='testeGonder btn btn-success' value='"+item.Id+"'>Teste Gönder</button></td></tr>");
+            modalBody.append("<tr><td>" + item.TalepTarihi + "</td><td>" + item.Hasta.Isim + " " + item.Hasta.Soyisim + "</td><td>" + item.TalepNedeni + "</td> <td><button type='submit' id='testYap' class='btn btn-success' value='" + item.Id + "'>Teste Gönder</button></td></tr>");
         });
     }
 
-    $(document).on("click", "#testeGonder", function (e) {
+    $(document).on("click", "#testYap", function (e) {
         console.log($(this).val());
-        $.ajax({
-            type: "POST",
-            url: "/Doktor/TesteGonder",
-            data: { 'talepId': $(this).val() },
-            success: function (data) {
-                alert("Gönderim başarılı!");
-                $("#talepModalClose").click();
-            },
-            error: function (error) {
-                console.error("Error fetching data:", error);
-            }
-        });
+        $("#testModal").modal('toggle');
     });
 </script>

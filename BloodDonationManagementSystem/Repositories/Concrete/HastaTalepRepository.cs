@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using static BloodDonationManagementSystem.Models.Hasta.HastaTalep;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using BloodDonationManagementSystem.Models.Doktor;
 
 namespace BloodDonationManagementSystem.Repositories.Concrete
 {
@@ -70,7 +71,7 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
             return items;
         }
 
-        public IEnumerable<HastaTalep> GetAllByDoktorId(int doktorId)
+        public IEnumerable<HastaTalep> GetAllBekleyenByDoktorId(int doktorId)
         {
             string query = "SELECT * FROM HastaTalep WHERE DoktorId = @DoktorId";
             var items = new List<HastaTalep>();
@@ -81,6 +82,28 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
+                    if (GetTalepDurumuById((int)reader["Id"]) != Durum.DoktorInceleme) continue;
+                    HastaTalep item = HastaTalepMapper.Map(reader);
+                    item.Hasta = uyeRepository.GetHastaById((int)reader["HastaId"]);
+                    item.TalepNedeni = (string)reader["TalepNedeni"];
+                    item.Id = (int)reader["Id"];
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+        public IEnumerable<HastaTalep> GetAllBekleyen()
+        {
+            string query = "SELECT * FROM HastaTalep";
+            var items = new List<HastaTalep>();
+            using (var connection = SqlHelper.GetSqlConnection())
+            {
+                SqlCommand command = new(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (GetTalepDurumuById((int)reader["Id"]) != Durum.Test) continue;
                     HastaTalep item = HastaTalepMapper.Map(reader);
                     item.Hasta = uyeRepository.GetHastaById((int)reader["HastaId"]);
                     item.TalepNedeni = (string)reader["TalepNedeni"];
@@ -148,6 +171,18 @@ namespace BloodDonationManagementSystem.Repositories.Concrete
                     return Durum.Test;
                 }
                 return Durum.DoktorInceleme;
+            }
+        }
+
+        public bool AddToBekleyenTalep(int talepId)
+        {
+            string query = "INSERT INTO HastaBekleyenTalep(TalepId) " +
+                    "VALUES(@TalepId)";
+            using (var connection = SqlHelper.GetSqlConnection())
+            {
+                SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@TalepId", talepId);
+                return command.ExecuteNonQuery() == 1 ? true : false;
             }
         }
     }
